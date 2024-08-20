@@ -15,8 +15,10 @@ def get_files_encoding(directory):
     file_names = []
     encodings = []
     
-    # Percorre o diretório
+    # Percorre os subdiretórios
     for root, dirs, files in os.walk(directory):
+        if root == directory:  # Ignora o diretório raiz
+            continue
         for file in files:
             file_path = os.path.join(root, file)
             try:
@@ -24,7 +26,7 @@ def get_files_encoding(directory):
             except Exception as e:
                 encoding = f"Error: {e}"
             
-            # Exibe o arquivo e pasta sendo lidos
+            # Exibe o arquivo e a pasta sendo lidos
             print(f"Lendo arquivo: {file}")
             print(f"Na pasta: {root}")
                 
@@ -44,7 +46,10 @@ def get_files_encoding(directory):
 
 # Solicita o diretório de entrada e de saída
 directory = input("Informe o diretório a ser verificado: ")
-output_path = input("Informe o caminho e nome do arquivo de saída (exemplo: /caminho/para/saida.xlsx): ")
+output_dir = input("Informe o caminho onde deseja salvar o arquivo de saída: ")
+
+# Concatena o caminho de saída com o nome do arquivo
+output_path = os.path.join(output_dir, "encode.xlsx")
 
 # Obtém o DataFrame com os encodings dos arquivos
 df_encodings = get_files_encoding(directory)
