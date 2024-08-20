@@ -3,11 +3,16 @@ import chardet
 import pandas as pd
 
 def detect_encoding(file_path):
-    # Detecta o encoding do arquivo
-    with open(file_path, 'rb') as file:
-        raw_data = file.read()
-        result = chardet.detect(raw_data)
-    return result['encoding']
+    try:
+        # Detecta o encoding do arquivo
+        with open(file_path, 'rb') as file:
+            raw_data = file.read()
+            if not raw_data:  # Verifica se o arquivo está vazio
+                return "Empty File"
+            result = chardet.detect(raw_data)
+            return result['encoding']
+    except Exception as e:
+        return f"Error: {e}"
 
 def get_files_encoding(directory):
     # Listas para armazenar informações
@@ -21,14 +26,12 @@ def get_files_encoding(directory):
             continue
         for file in files:
             file_path = os.path.join(root, file)
-            try:
-                encoding = detect_encoding(file_path)
-            except Exception as e:
-                encoding = f"Error: {e}"
             
             # Exibe o arquivo e a pasta sendo lidos
             print(f"Lendo arquivo: {file}")
             print(f"Na pasta: {root}")
+            
+            encoding = detect_encoding(file_path)
                 
             # Armazena as informações nas listas
             file_paths.append(file_path)
