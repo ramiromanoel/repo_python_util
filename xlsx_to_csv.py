@@ -19,7 +19,12 @@ def convert_xlsx_to_csv(input_dir, output_dir, separator):
 
     # Converte os arquivos com barra de progresso
     for idx, file_path in enumerate(tqdm(xlsx_files, desc="Convertendo arquivos", unit="arquivo")):
-        output_file_path = os.path.join(output_dir, f"{os.path.splitext(os.path.basename(file_path))[0]}.csv")
+        # Obtém o nome da pasta onde o arquivo está localizado
+        directory_name = os.path.basename(os.path.dirname(file_path))
+        
+        # Define o nome do arquivo de saída com o prefixo do diretório
+        output_file_name = f"{directory_name}_{os.path.splitext(os.path.basename(file_path))[0]}.csv"
+        output_file_path = os.path.join(output_dir, output_file_name)
         
         try:
             # Lê o arquivo .xlsx usando pandas
