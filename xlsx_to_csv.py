@@ -25,8 +25,8 @@ def convert_xlsx_to_csv(input_dir, output_dir):
             # Lê o arquivo .xlsx usando pandas
             df = pd.read_excel(file_path, engine='openpyxl')
             
-            # Converte e salva como .csv no diretório de output
-            df.to_csv(output_file_path, index=False)
+            # Converte e salva como .csv no diretório de output com encoding UTF-8
+            df.to_csv(output_file_path, index=False, encoding='utf-8')
             print(f"{idx + 1}/{total_files} - Arquivo convertido: {file_path} -> {output_file_path}")
         
         except Exception as e:
