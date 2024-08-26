@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-def convert_xlsx_to_csv(input_dir, output_dir):
+def convert_xlsx_to_csv(input_dir, output_dir, separator):
     # Verifica se o diretório de output existe, caso contrário, cria
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -25,8 +25,8 @@ def convert_xlsx_to_csv(input_dir, output_dir):
             # Lê o arquivo .xlsx usando pandas
             df = pd.read_excel(file_path, engine='openpyxl')
             
-            # Converte e salva como .csv no diretório de output com encoding UTF-8
-            df.to_csv(output_file_path, index=False, encoding='utf-8')
+            # Converte e salva como .csv no diretório de output com encoding ISO-8859-1
+            df.to_csv(output_file_path, index=False, encoding='ISO-8859-1', sep=separator, errors='replace')
             print(f"{idx + 1}/{total_files} - Arquivo convertido: {file_path} -> {output_file_path}")
         
         except Exception as e:
@@ -35,4 +35,10 @@ def convert_xlsx_to_csv(input_dir, output_dir):
 if __name__ == "__main__":
     input_dir = input("Digite o caminho do diretório de input: ")
     output_dir = input("Digite o caminho do diretório de output: ")
-    convert_xlsx_to_csv(input_dir, output_dir)
+    separator = input("Digite o separador desejado (por exemplo, ',' para vírgula ou ';' para ponto e vírgula): ")
+    
+    # Validar o separador se estiver vazio
+    if not separator:
+        separator = ','  # Definindo a vírgula como separador padrão
+    
+    convert_xlsx_to_csv(input_dir, output_dir, separator)
