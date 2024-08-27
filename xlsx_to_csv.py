@@ -1,6 +1,15 @@
 import os
 import pandas as pd
+import chardet
 from tqdm import tqdm
+
+def detect_encoding(file_path):
+    """
+    Detecta o encoding de um arquivo.
+    """
+    with open(file_path, 'rb') as f:
+        result = chardet.detect(f.read())
+    return result['encoding']
 
 def convert_xlsx_to_csv(input_dir, output_dir, separator):
     # Verifica se o diretório de output existe, caso contrário, cria
@@ -26,12 +35,21 @@ def convert_xlsx_to_csv(input_dir, output_dir, separator):
         output_file_name = f"{directory_name}_{os.path.splitext(os.path.basename(file_path))[0]}.csv"
         output_file_path = os.path.join(output_dir, output_file_name)
         
+        # Detecta o encoding do arquivo
+        detected_encoding = detect_encoding(file_path)
+        print(f"Encoding detectado para {file_path}: {detected_encoding}")
+        
+        # Pergunta ao usuário qual encoding deseja usar
+        encoding_to_use = input(f"Qual encoding deseja usar para {file_path}? (Padrão: {detected_encoding}): ")
+        if not encoding_to_use:
+            encoding_to_use = detected_encoding
+        
         try:
-            # Lê o arquivo .xlsx usando pandas
+            # Lê o arquivo .xlsx usando pandas com encoding específico
             df = pd.read_excel(file_path, engine='openpyxl')
             
-            # Converte e salva como .csv no diretório de output com encoding ISO-8859-1
-            df.to_csv(output_file_path, index=False, encoding='ISO-8859-1', sep=separator, errors='replace')
+            # Converte e salva como .csv no diretório de output com encoding especificado
+            df.to_csv(output_file_path, index=False, encoding=encoding_to_use, sep=separator, errors='replace')
             print(f"{idx + 1}/{total_files} - Arquivo convertido: {file_path} -> {output_file_path}")
         
         except Exception as e:
