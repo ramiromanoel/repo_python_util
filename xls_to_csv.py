@@ -52,4 +52,16 @@ def convert_xls_to_csv(input_dir, output_dir, separator):
             df.to_csv(output_file_path, index=False, encoding=encoding_to_use, sep=separator, errors='replace')
             print(f"{idx + 1}/{total_files} - Arquivo convertido: {file_path} -> {output_file_path}")
         
-       
+        except Exception as e:
+            print(f"Erro ao converter {file_path}: {e}")
+
+if __name__ == "__main__":
+    input_dir = input("Digite o caminho do diretório de input: ")
+    output_dir = input("Digite o caminho do diretório de output: ")
+    separator = input("Digite o separador desejado (por exemplo, ',' para vírgula ou ';' para ponto e vírgula): ")
+    
+    # Validar o separador se estiver vazio
+    if not separator:
+        separator = ','  # Definindo a vírgula como separador padrão
+    
+    convert_xls_to_csv(input_dir, output_dir, separator)
